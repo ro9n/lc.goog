@@ -11,24 +11,44 @@
 
 using namespace std;
 
+#define pb     push_back
+#define all(v) v.begin(), v.end()
+#define ff     first
+#define ss     second
+
+typedef pair<int, int> ii;
+
 class Solution {
  public:
-  string findReplaceString(string S, vector<int>& indices, vector<string>& sources, vector<string>& targets) {
-    int n = indices.size(), l = 0;
-    vector<int> accept(n);
-    for(int i = 0; i < n; ++i) {
-      accept[i] = S.substr(indices[i], sources[indices[i]].size()) == sources[i];
+  string findReplaceString(string S, vector<int>& I, vector<string>& F, vector<string>& R) {
+    int n = I.size();
+
+    vector<ii> II;
+
+    for (int i = 0; i < n; ++i) {
+      if (S.substr(I[i], F[i].size()) == F[i]) II.pb({I[i], i});
     }
 
+    sort(all(II), [](ii a, ii b) { return a.ff < b.ff; });
+
     string s;
-    for(int r = 0, i = 0; i < n; ++i) {
-      if (!accept[i]) continue;
-      r = indices[i] - 1;
-      s += S.substr(l, r - l + 1);
-      s += targets[i];
-      l = indices[i] + sources[i].size();
+    int n2 = S.size(), n3 = II.size();
+
+    for (int i = n2 - 1, j = n3 - 1; i >= 0; --i) {
+      if (~j) {
+        int l = I[II[j].ss], r = l + F[II[j].ss].size() - 1;
+        if (i > r) s += S[i];
+        else {
+          i = l; // keep one index to the right because --i at the for loop definition
+          for (int k = R[II[j].ss].size() - 1; k >= 0; --k) {
+            s += R[II[j].ss][k];
+          }
+          --j;
+        }
+      } else s += S[i];
     }
-    s += S.substr(l);
+
+    reverse(all(s));
 
     return s;
   }
