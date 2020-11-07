@@ -1,5 +1,5 @@
 /**
- * @file 3.1.btree.max.path.sum
+ * @file 3.5.count.complete.tree.nodes
  * @author Touhid Alam <taz.touhid@gmail.com>
  *
  * @date Sunday October 18 2020
@@ -11,6 +11,9 @@
 
 using namespace std;
 
+#define ld left
+#define rd right
+
 struct TreeNode {
   int val;
   TreeNode *left;
@@ -21,21 +24,23 @@ struct TreeNode {
       : val(x), left(left), right(right) {}
 };
 
-const int INF = 1e5 + 7;
-
-int best;
-
-int dfs(TreeNode *h) {
-  if (!h) return 0;
-  int l = max(dfs(h->left), 0), r = max(dfs(h->right), 0);
-  best = max(best, l + h->val + r);
-  return h->val + max(l, r);
-}
-
 class Solution {
  public:
-  int maxPathSum(TreeNode *root) {
-    best = -INF, dfs(root);
-    return best;
+  int countNodes(TreeNode *r) {
+    int ans = 0;
+    if (!r) return ans;
+    queue<TreeNode *> q; q.push(r);
+
+    while(!q.empty()) {
+        auto f = q.front(); q.pop();
+        ++ans;
+        
+        if (f->rd && !f->ld) continue;
+        
+        if (f->ld) q.push(f->ld);
+        if (f->rd) q.push(f->rd);
+    }
+
+    return ans;
   }
 };

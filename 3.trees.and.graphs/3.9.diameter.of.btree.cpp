@@ -1,8 +1,8 @@
 /**
- * @file 3.1.btree.max.path.sum
+ * @file 3.9.diameter.of.btree
  * @author Touhid Alam <taz.touhid@gmail.com>
  *
- * @date Sunday October 18 2020
+ * @date Monday October 19 2020
  *
  * @brief 
  */
@@ -10,6 +10,9 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+
+#define ld left
+#define rd right
 
 struct TreeNode {
   int val;
@@ -21,21 +24,20 @@ struct TreeNode {
       : val(x), left(left), right(right) {}
 };
 
-const int INF = 1e5 + 7;
-
 int best;
 
-int dfs(TreeNode *h) {
-  if (!h) return 0;
-  int l = max(dfs(h->left), 0), r = max(dfs(h->right), 0);
-  best = max(best, l + h->val + r);
-  return h->val + max(l, r);
+int dfs(TreeNode *r) {
+  if (!r) return 0;
+  int left = dfs(r->ld), right = dfs(r->rd);
+  best = max(best, left + right);
+  return 1 + max(left, right);
 }
 
 class Solution {
- public:
-  int maxPathSum(TreeNode *root) {
-    best = -INF, dfs(root);
-    return best;
-  }
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        best = 0, dfs(root);
+        return best;
+    }
 };
+
